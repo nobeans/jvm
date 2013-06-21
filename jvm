@@ -1,0 +1,112 @@
+#!/bin/bash
+
+JAVA_HOME_BASE=/Library/Java/JavaVirtualMachines
+
+#
+# Requirements:
+#   Mac only (some paths is specialized for Mac)
+#   JDK7 only (some paths is specialized for JDK7)
+#   JAVA_HOME=$JAVA_HOME_BASE/current
+#       * actually it must be expanded to absolute path.
+#
+
+resolve_symlink() {
+    local TARGET=$1
+
+    # if target is symbolic link
+    if [ -L $TARGET ]; then
+        local ORIGINAL_FILEPATH=`readlink $TARGET`
+
+        # if original is specified as absolute path
+        if [ $(echo $ORIGINAL_FILEPATH | cut -c 1) = "/" ]; then
+            echo "$ORIGINAL_FILEPATH"
+        else
+            echo "$(dirname $TARGET)/$ORIGINAL_FILEPATH"
+        fi
+    else
+        echo "$TARGET"
+    fi
+}
+
+expand_path() {
+    local TARGET=$1
+    if [ -d "$TARGET" ]; then
+        echo $(cd $TARGET && pwd -P)
+    elif [ -f "$TARGET" ]; then
+        local TARGET_RESOLVED=$(resolve_symlink $TARGET)
+        local FILENAME=$(basename $TARGET_RESOLVED)
+        local DIR_EXPANDED="$(expand_path $(dirname $TARGET_RESOLVED))"
+        echo "$DIR_EXPANDED/$FILENAME"
+    else
+        echo "$TARGET"
+    fi
+}
+
+usage() {
+    echo "usage: `basename $0` <command> [<versino>]"
+    echo "  command: list, default"
+}
+
+die() {
+    local message=$1
+    echo "ERROR: $message" >&2
+    usage
+    exit
+}
+
+current_version() {
+    if [ ! -s $JAVA_HOME_BASE/current ]; then
+        echo ""
+    else
+        expand_path $JAVA_HOME_BASE/current | xargs basename | sed -E "s/\.?jdk//g"
+    fi
+}
+
+if [ ! -d $JAVA_HOME_BASE ]; then
+    die "$JAVA_HOME_BASE not found"
+fi
+
+CMD=$1
+if [ "$CMD" = "" ]; then
+    die "Command not specified"
+fi
+shift
+
+case $CMD in
+    list)
+        echo "============================================================"
+        echo "Avaiable JVM Versions"
+        echo "============================================================"
+        echo
+        CURRENT=`current_version`
+        for VERSION in `ls -1 $JAVA_HOME_BASE | grep ".jdk" | sed -E "s/\.?jdk//g" | sort -r`
+        do
+            if [ "$CURRENT" = "$VERSION" ]; then
+                echo -n "> * "
+            else
+                echo -n "  * "
+            fi
+            echo $VERSION
+        done
+        echo
+        echo "============================================================"
+        echo "* - installed"
+        echo "> - currently in use"
+        echo "============================================================"
+        ;;
+    default)
+        VERSION=$1
+        if [ ! -d  $JAVA_HOME_BASE/jdk$VERSION.jdk ]; then
+            die "java $VERSION is not available"
+        fi
+        if [ -h $JAVA_HOME_BASE/current ]; then
+            rm $JAVA_HOME_BASE/current
+        fi
+        ln -s $JAVA_HOME_BASE/jdk$VERSION.jdk $JAVA_HOME_BASE/current
+        echo "Default java version set to $VERSION"
+        ;;
+    *)
+        die "Unexpected command: $CMD"
+        ;;
+esac
+
