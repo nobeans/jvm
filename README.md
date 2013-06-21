@@ -5,6 +5,7 @@
 * Mac only (some paths is specialized for Mac)
 * JDK7 only (some paths is specialized for JDK7)
 * `JAVA_HOME=/Library/Java/JavaVirtualMachines/current`
+* Owner of both of `/Library/Java/JavaVirtualMachines` and `/Library/Java/JavaVirtualMachines/current` must be *YOU*
 
 ## Installation
 
