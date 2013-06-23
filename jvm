@@ -75,7 +75,7 @@ shift
 case $CMD in
     list)
         echo "============================================================"
-        echo "Avaiable JVM Versions"
+        echo "Available JVM Versions"
         echo "============================================================"
         echo
         CURRENT=`current_version`
