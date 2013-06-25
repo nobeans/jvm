@@ -104,19 +104,25 @@ case $CMD in
         ;;
     default)
         VERSION=$1
-        if [[ "$VERSION" =~ ^1.6 ]]; then
-            rm $JAVA_HOME_BASE/current
-            ln -s $JAVA6_HOME $JAVA_HOME_BASE/current
-            exit 0
-        fi
 
-        if [ ! -d  $JAVA_HOME_BASE/jdk$VERSION.jdk ]; then
+        # Resolve specified JDK
+        if [[ "$VERSION" =~ ^1.6 ]]; then
+            SPECIFIED_JDK_DIR=$JAVA6_HOME
+        elif [ -d $JAVA_HOME_BASE/$VERSION.jdk ]; then
+            SPECIFIED_JDK_DIR=$JAVA_HOME_BASE/$VERSION.jdk
+        elif [ -d $JAVA_HOME_BASE/jdk$VERSION.jdk ]; then
+            SPECIFIED_JDK_DIR=$JAVA_HOME_BASE/jdk$VERSION.jdk
+        else
             die "java $VERSION is not available"
         fi
+
+        # Delete current symbolic link
         if [ -h $JAVA_HOME_BASE/current ]; then
             rm $JAVA_HOME_BASE/current
         fi
-        ln -s $JAVA_HOME_BASE/jdk$VERSION.jdk $JAVA_HOME_BASE/current
+
+        # Create new symbolic link
+        ln -s $SPECIFIED_JDK_DIR $JAVA_HOME_BASE/current
         echo "Default java version set to $VERSION"
         ;;
     *)
