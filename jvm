@@ -49,13 +49,16 @@ expand_path() {
 }
 
 usage() {
-    echo "usage: `basename $0` <command> [<versino>]"
-    echo "  command: list, default"
+    echo "Usage: `basename $0` <command> [version]"
+    echo
+    echo "  command : list, default"
+    echo
+    echo "eg: jvm list"
 }
 
 die() {
     local message=$1
-    echo "ERROR: $message" >&2
+    [ "$message" != "" ] && echo -e "$message\n" >&2
     usage
     exit
 }
@@ -73,9 +76,7 @@ if [ ! -d $JAVA_HOME_BASE ]; then
 fi
 
 CMD=$1
-if [ "$CMD" = "" ]; then
-    die "Command not specified"
-fi
+[ "$CMD" = "" ] && die
 shift
 
 case $CMD in
@@ -131,7 +132,7 @@ case $CMD in
         echo "Default java version set to $VERSION"
         ;;
     *)
-        die "Unexpected command: $CMD"
+        die "Invalid command: $CMD"
         ;;
 esac
 
