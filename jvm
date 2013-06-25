@@ -1,6 +1,7 @@
 #!/bin/bash
 
 JAVA_HOME_BASE=/Library/Java/JavaVirtualMachines
+JAVA6_HOME=/System/Library/Java/JavaVirtualMachines/1.6.0.jdk
 
 #
 # Requirements:
@@ -88,6 +89,13 @@ case $CMD in
             fi
             echo $VERSION
         done
+        if [ -d $JAVA6_HOME ]; then
+            if [ "$CURRENT" = "1.6.0" ]; then
+                echo "> * 1.6 (Apple)"
+            else
+                echo "  * 1.6 (Apple)"
+            fi
+        fi
         echo
         echo "============================================================"
         echo "* - installed"
@@ -96,6 +104,12 @@ case $CMD in
         ;;
     default)
         VERSION=$1
+        if [[ "$VERSION" =~ ^1.6 ]]; then
+            rm $JAVA_HOME_BASE/current
+            ln -s $JAVA6_HOME $JAVA_HOME_BASE/current
+            exit 0
+        fi
+
         if [ ! -d  $JAVA_HOME_BASE/jdk$VERSION.jdk ]; then
             die "java $VERSION is not available"
         fi
