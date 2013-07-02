@@ -51,7 +51,10 @@ expand_path() {
 usage() {
     echo "Usage: `basename $0` <command> [version]"
     echo
-    echo "  command : list, default"
+    echo "   commands:"
+    echo "       list     [version]"
+    echo "       default  [version]"
+    echo "       help"
     echo
     echo "eg: jvm list"
 }
@@ -60,7 +63,7 @@ die() {
     local message=$1
     [ "$message" != "" ] && echo -e "$message\n" >&2
     usage
-    exit
+    exit 1
 }
 
 current_version() {
@@ -130,6 +133,10 @@ case $CMD in
         # Create new symbolic link
         ln -s $SPECIFIED_JDK_DIR $JAVA_HOME_BASE/current
         echo "Default java version set to $VERSION"
+        ;;
+    help)
+        usage
+        exit 0
         ;;
     *)
         die "Invalid command: $CMD"
