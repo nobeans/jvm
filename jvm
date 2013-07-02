@@ -52,8 +52,8 @@ usage() {
     echo "Usage: `basename $0` <command> [version]"
     echo
     echo "   commands:"
-    echo "       list     [version]"
-    echo "       default  [version]"
+    echo "       list    or ls [version]"
+    echo "       default or d  [version]"
     echo "       help"
     echo
     echo "eg: jvm list"
@@ -83,7 +83,7 @@ CMD=$1
 shift
 
 case $CMD in
-    list)
+    list | ls)
         echo "============================================================"
         echo "Available JVM Versions"
         echo "============================================================"
@@ -111,11 +111,13 @@ case $CMD in
         echo "> - currently in use"
         echo "============================================================"
         ;;
-    default)
+    default | d)
         VERSION=$1
 
         # Resolve specified JDK
-        if [[ "$VERSION" =~ ^1.6 ]]; then
+        if [ -z "$VERSION" ]; then
+            die "No candidate provided."
+        elif [[ "$VERSION" =~ ^1.6 ]]; then
             SPECIFIED_JDK_DIR=$JAVA6_HOME
         elif [ -d $JAVA_HOME_BASE/$VERSION.jdk ]; then
             SPECIFIED_JDK_DIR=$JAVA_HOME_BASE/$VERSION.jdk
