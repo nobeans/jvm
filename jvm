@@ -127,6 +127,12 @@ case $CMD in
             die "java $VERSION is not available"
         fi
 
+        if [ ! -w $JAVA_HOME_BASE/current ]; then
+           echo "Permission denied to change '$JAVA_HOME_BASE/current'"
+           echo "Run with sudo."
+           exit 0;
+        fi
+
         # Delete current symbolic link
         if [ -h $JAVA_HOME_BASE/current ]; then
             rm $JAVA_HOME_BASE/current
