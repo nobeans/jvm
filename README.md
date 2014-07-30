@@ -1,18 +1,30 @@
 # JVM the *poor* Java enVironment Manager
 
+JVM is a tool for managing parallel Versions of multiple JDK.
+It provides a convenient command line interface for switching and listing Candidates.
+Notice that you must use an official JDK installer because it doesn't support installing JDK.
+
+JVM was inspired by the [GVM](http://gvmtool.net/).
+
+
+## Demo
+
+![demo](./jvm-demo.gif)
+
+
 ## Requirements
 
-* Mac only (some paths is specialized for Mac)
+* Mac only (currentyly some paths are specialized for Mac)
 * `JAVA_HOME=/Library/Java/JavaVirtualMachines/current`
-* Owner of both of `/Library/Java/JavaVirtualMachines` and `/Library/Java/JavaVirtualMachines/current` must be *YOU*
-* Use official installer for installation of JVMs
+
 
 ## Installation
 
-Copy the `jvm` script to a bin directory.
+* Copy the `jvm` script to your `bin` directory
+
 
 ## Commands
 
-* list - Show list of installed JVM versions
-* default - Set current JVM version
+* `list` / `ls` - Show list of installed JVM versions
+* `default` / `d` - Set current JVM version
     - To replace the symbolic link of `/Library/Java/JavaVirtualMachines/current`
