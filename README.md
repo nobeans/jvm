@@ -1,4 +1,4 @@
-# JVM the *poor* Java enVironment Manager
+# JVM the Java enVironment Manager
 
 JVM is a tool for managing parallel Versions of multiple JDK.
 It provides a convenient command line interface for switching and listing Candidates.
@@ -15,7 +15,10 @@ JVM was inspired by the [GVM](http://gvmtool.net/).
 ## Requirements
 
 * Mac only (currentyly some paths are specialized for Mac)
-* `JAVA_HOME=/Library/Java/JavaVirtualMachines/current`
+    - `JAVA_HOME=/Library/Java/JavaVirtualMachines/current`
+    - You can cutomize it by editing `jvm` script file directly.
+* Java SDKs
+    - You must install them by an official installer.
 
 
 ## Installation
@@ -28,3 +31,8 @@ JVM was inspired by the [GVM](http://gvmtool.net/).
 * `list` / `ls` - Show list of installed JVM versions
 * `default` / `d` - Set current JVM version
     - To replace the symbolic link of `/Library/Java/JavaVirtualMachines/current`
+
+## License
+
+Apache License, Version 2.0
+
