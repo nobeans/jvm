@@ -129,7 +129,6 @@ case $CMD in
 
         # Check existance
         if [ -d $JAVA_HOME_BASE/current ]; then
-            echo "Exists!"
             # Check permission
             if [ ! -w $JAVA_HOME_BASE/current ]; then
                echo "Permission denied to change '$JAVA_HOME_BASE/current'"
@@ -146,8 +145,6 @@ case $CMD in
 
             # Delete and create new symbolic link
             rm $JAVA_HOME_BASE/current
-        else
-            echo "Not exists!"
         fi
         ln -s $SPECIFIED_JDK_DIR $JAVA_HOME_BASE/current
         echo "Default java version set to $VERSION"
