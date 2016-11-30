@@ -1,0 +1,48 @@
+#!/bin/bash -e
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+
+JAVA_HOME_BASE=/Library/Java/JavaVirtualMachines
+JAVA6_HOME=/System/Library/Java/JavaVirtualMachines/1.6.0.jdk
+SDKMAN_CANDIDATES_JAVA_DIR=~/.sdkman/candidates/java
+VERSION_PREFIX=_
+
+# Delete all previous created links
+find $SDKMAN_CANDIDATES_JAVA_DIR -name "${VERSION_PREFIX}*" -depth 1 | xargs rm
+
+# Create links of Java 7-8
+for jdk in $(ls $JAVA_HOME_BASE)
+do
+    base_dir=$JAVA_HOME_BASE/$jdk
+    [ ! -d $base_dir ] && continue
+    [ -L $base_dir ] && continue
+
+    # They're not under a management of sdkman. So the version name is tweaked a little.
+    version_name=$(echo $jdk | sed -E "s/^jdk1.|\.jdk$//g" | sed -e "s/.0//" | sed -e "s/_/u/")
+    version_name="${VERSION_PREFIX}${version_name}"
+
+    ln -s $base_dir/Contents/Home $SDKMAN_CANDIDATES_JAVA_DIR/$version_name
+    echo "Linked $base_dir/Contents/Home -> $SDKMAN_CANDIDATES_JAVA_DIR/$version_name"
+done
+
+# Create link of Java 6
+if [ -d $JAVA6_HOME ]; then
+    version_name="${VERSION_PREFIX}6"
+    ln -s $JAVA6_HOME/Contents/Home $SDKMAN_CANDIDATES_JAVA_DIR/$version_name
+    echo "Linked $base_dir/Contents/Home -> $SDKMAN_CANDIDATES_JAVA_DIR/$version_name"
+fi
+
+echo "Done."
+
