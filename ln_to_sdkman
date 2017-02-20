@@ -19,6 +19,8 @@ JAVA6_HOME=/System/Library/Java/JavaVirtualMachines/1.6.0.jdk
 SDKMAN_CANDIDATES_JAVA_DIR=~/.sdkman/candidates/java
 VERSION_PREFIX=_
 
+mkdir -p $SDKMAN_CANDIDATES_JAVA_DIR
+
 # Delete all previous created links
 find $SDKMAN_CANDIDATES_JAVA_DIR -name "${VERSION_PREFIX}*" -depth 1 | xargs rm
 
